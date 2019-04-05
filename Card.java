@@ -2,14 +2,11 @@ package org.debatetool.core;
 
 import org.debatetool.io.IOUtil;
 import org.debatetool.io.iocontrollers.IOController;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 
-import javax.imageio.IIOException;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -113,13 +110,13 @@ public class Card extends HashIdentifiedSpeechComponent implements StateRecovera
         text = IOUtil.readDeserializeString(in);
         byte nullTerm = in.readByte();
         if (nullTerm!=0){
-            throw new IIOException("Card missing null terminator");
+            throw new IllegalStateException("Card missing null terminator");
         }
         if (checkHash){
             byte[] validHash = generateHash();
             if (!Arrays.equals(hash,validHash)){
                 hash = validHash;
-                throw new IIOException("Hash validation failed for card load");
+                throw new IllegalStateException("Hash validation failed for card load");
             }
         }
     }
@@ -198,14 +195,7 @@ public class Card extends HashIdentifiedSpeechComponent implements StateRecovera
     }
 
     public List<String> getTags(){
-        ObservableList<String> observableTags = FXCollections.observableList(tags);
-        observableTags.addListener(new ListChangeListener<String>() {
-            @Override
-            public void onChanged(Change<? extends String> change) {
-                setModified(true);
-            }
-        });
-        return observableTags;
+        return Collections.unmodifiableList(tags);
     }
 
     public void setTags(List<String> tags){
