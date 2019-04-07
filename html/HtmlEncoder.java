@@ -105,6 +105,7 @@ public final class HtmlEncoder {
         }
 
         // Special characters
+        htmlCode['\\'] = "&#"+Integer.toString('\\');
         htmlCode['\t'] = "\t";
         htmlCode['\n'] = "<br/>\n";
         htmlCode['\"'] = "&quot;"; // double quote

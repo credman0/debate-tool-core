@@ -1,5 +1,6 @@
 package org.debatetool.core;
 
+import org.debatetool.core.html.HtmlEncoder;
 import org.debatetool.io.IOUtil;
 
 import java.io.DataInput;
@@ -54,6 +55,6 @@ public class Cite implements Serializable {
     }
 
     public String getDisplayContent(){
-        return "<c>"+getAuthor() + " " + getDate() + "</c> ("+getAdditionalInfo()+")";
+        return "<c>"+ HtmlEncoder.encode(getAuthor() + " " + getDate()) + "</c> ("+HtmlEncoder.encode(getAdditionalInfo())+")";
     }
 }

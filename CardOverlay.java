@@ -3,6 +3,7 @@ package org.debatetool.core;
 
 import gnu.trove.list.array.TShortArrayList;
 import gnu.trove.list.array.TByteArrayList;
+import org.debatetool.core.html.HtmlEncoder;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -48,7 +49,7 @@ public class CardOverlay implements Serializable {
             if (underline){
                 htmlBuilder.append("<u>");
             }
-            htmlBuilder.append(plainText.substring(position,position+overlayPositions.get(i)));
+            htmlBuilder.append(sanitizeHTML(plainText.substring(position,position+overlayPositions.get(i))));
             if (underline){
                 htmlBuilder.append("</u>");
             }
@@ -57,12 +58,12 @@ public class CardOverlay implements Serializable {
             }
             position+=overlayPositions.get(i);
         }
-        htmlBuilder.append(plainText.substring(position));
-        return sanitizeHTML(htmlBuilder.toString());
+        htmlBuilder.append(sanitizeHTML(plainText.substring(position)));
+        return htmlBuilder.toString();
     }
 
     private String sanitizeHTML(String html){
-        return html.replaceAll("\\\"", "&quot;");
+        return HtmlEncoder.encode(html);
     }
 
     public void updateOverlay(int start, int end, byte overlayType){

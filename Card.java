@@ -1,5 +1,6 @@
 package org.debatetool.core;
 
+import org.debatetool.core.html.HtmlEncoder;
 import org.debatetool.io.IOUtil;
 import org.debatetool.io.iocontrollers.IOController;
 
@@ -223,6 +224,7 @@ public class Card extends HashIdentifiedSpeechComponent implements StateRecovera
         if (loadedOverlay==null){
             loadOverlay();
         }
+        // the overlay sanitizes the text, so don't encode it a second time
         return getCite().getDisplayContent()+"<br>"+loadedOverlay.generateHTML(getText());
     }
 

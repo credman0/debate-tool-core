@@ -1,5 +1,7 @@
 package org.debatetool.core;
 
+import org.debatetool.core.html.HtmlEncoder;
+
 import java.io.IOException;
 
 public class Analytic extends SpeechComponent {
@@ -11,7 +13,7 @@ public class Analytic extends SpeechComponent {
 
     @Override
     public String getDisplayContent() {
-        return "<t>"+content+"</t>";
+        return "<t>"+ HtmlEncoder.encode(content)+"</t>";
     }
 
     @Override
