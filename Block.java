@@ -38,7 +38,23 @@ public class Block extends HashIdentifiedSpeechComponent {
         for (int i = 0; i < contents.size(); i++) {
             contentsBuilder.append("<n>"+toAlphabet(i) + ") </n>");
             SpeechComponent component = contents.get(i);
-            if (component.getClass().isAssignableFrom(Card.class)){
+            if (component instanceof Card){
+                contentsBuilder.append("<n>"+((Card) component).getActiveTag() + "</n><br>");
+            }
+            contentsBuilder.append(component.getDisplayContent() + "<br>");
+        }
+        return contentsBuilder.toString();
+    }
+
+    public String getExportDisplayContent(boolean includeAnalytics){
+        StringBuilder contentsBuilder = new StringBuilder();
+        for (int i = 0; i < contents.size(); i++) {
+            SpeechComponent component = contents.get(i);
+            if (!includeAnalytics && component instanceof Analytic){
+                continue;
+            }
+            contentsBuilder.append("<n>"+toAlphabet(i) + ") </n>");
+            if (component instanceof Card){
                 contentsBuilder.append("<n>"+((Card) component).getActiveTag() + "</n><br>");
             }
             contentsBuilder.append(component.getDisplayContent() + "<br>");

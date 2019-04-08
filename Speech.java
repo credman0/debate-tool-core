@@ -37,6 +37,24 @@ public class Speech extends HashIdentifiedSpeechComponent{
         return contentsBuilder.toString();
     }
 
+    public String getExportDisplayContent(boolean includeAnalytics){
+        StringBuilder contentsBuilder = new StringBuilder();
+        for (int i = 0; i < contents.size(); i++) {
+            SpeechComponent component = contents.get(i);
+            contentsBuilder.append("<p><n>"+(i+1)+") </n>");
+            if (component instanceof Card){
+                contentsBuilder.append("<n>"+((Card) component).getActiveTag() + "</n>");
+            }
+            contentsBuilder.append("</p>");
+            if (component instanceof Block){
+                contentsBuilder.append(((Block) component).getExportDisplayContent(includeAnalytics));
+            }else{
+                contentsBuilder.append(component.getDisplayContent());
+            }
+        }
+        return contentsBuilder.toString();
+    }
+
     @Override
     public String getStorageString() {
         return null;
