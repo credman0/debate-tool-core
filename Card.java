@@ -344,4 +344,13 @@ public class Card extends HashIdentifiedSpeechComponent implements StateRecovera
         this.preferredHighlightIndex = preferredHighlightIndex;
         loadedOverlay = null;
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof Card)){
+            return false;
+        }
+        Card oc = (Card) o;
+        return text.equals(oc.text) && cite.equals(oc.cite);
+    }
 }

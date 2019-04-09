@@ -45,4 +45,12 @@ public class Analytic extends SpeechComponent {
     public boolean isLoaded() {
         return true;
     }
+
+    @Override
+    public boolean equals(Object o){
+        if (!(o instanceof Analytic)){
+            return false;
+        }
+        return content.equals(((Analytic) o).content);
+    }
 }

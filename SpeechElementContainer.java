@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class SpeechElementContainer extends HashIdentifiedSpeechComponent {
@@ -208,6 +209,14 @@ public abstract class SpeechElementContainer extends HashIdentifiedSpeechCompone
         loaded = false;
         this.contents = container.contents;
         load();
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (!(o instanceof SpeechElementContainer)){
+            return false;
+        }
+        return contents.equals(((SpeechElementContainer) o).contents) && getHash().equals(((SpeechElementContainer) o).getHash()) && getName().equals(((SpeechElementContainer) o).getName());
     }
 
     protected abstract String getEnumeration(int i);

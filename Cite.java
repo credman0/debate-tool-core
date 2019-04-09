@@ -57,4 +57,13 @@ public class Cite implements Serializable {
     public String getDisplayContent(){
         return "<c>"+ HtmlEncoder.encode(getAuthor() + " " + getDate()) + "</c> ("+HtmlEncoder.encode(getAdditionalInfo())+")";
     }
+
+    @Override
+    public boolean equals(Object o){
+        if (!(o instanceof Cite)){
+            return false;
+        }
+        Cite oc = (Cite) o;
+        return (oc.author.equals(author)) && (oc.additionalInfo.equals(additionalInfo)) && (oc.date.equals(date));
+    }
 }
