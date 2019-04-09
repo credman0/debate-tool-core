@@ -10,6 +10,12 @@ import java.util.List;
 
 public abstract class HashIdentifiedSpeechComponent extends SpeechComponent {
     private boolean modified = false;
+    private byte[] hash;
+
+    protected HashIdentifiedSpeechComponent(byte[] hash) {
+        this.hash = hash;
+    }
+    protected HashIdentifiedSpeechComponent(){}
 
     public boolean isModified() {
         return modified;
@@ -17,9 +23,6 @@ public abstract class HashIdentifiedSpeechComponent extends SpeechComponent {
 
     protected void setModified(boolean modified) {
         this.modified = modified;
-        if (modified) {
-            hash = null;
-        }
     }
 
     public abstract long getTimeStamp();
@@ -31,23 +34,21 @@ public abstract class HashIdentifiedSpeechComponent extends SpeechComponent {
      */
     public abstract String getLabel();
 
-    protected byte[] hash = null;
-
     public abstract ArrayList<String>[] toLabelledLists();
 
     public abstract void importFromLabelledLists(ArrayList<String> labels, ArrayList<String> values);
 
     public static HashIdentifiedSpeechComponent createFromLabelledLists(String type, ArrayList<String> labels, ArrayList<String> values, byte[] hash) {
         if (type.equals(Card.class.getName())) {
-            Card card = new Card((byte[]) null);
+            Card card = new Card(hash);
             card.importFromLabelledLists(labels, values);
             return card;
         } else if (type.equals(Block.class.getName())) {
-            Block block = new Block(IOController.getIoController().getStructureIOManager().getBlockPath(hash));
+            Block block = new Block(hash);
             block.importFromLabelledLists(labels, values);
             return block;
         }else if (type.equals(Speech.class.getName())) {
-            Speech speech = new Speech(IOController.getIoController().getStructureIOManager().getBlockPath(hash));
+            Speech speech = new Speech(hash);
             speech.importFromLabelledLists(labels, values);
             return speech;
         } else {
@@ -55,14 +56,10 @@ public abstract class HashIdentifiedSpeechComponent extends SpeechComponent {
         }
     }
 
-    public abstract String getHashString();
-
-    protected byte[] generateHash() {
-        return performHash(getHashString());
-    }
+    protected abstract byte[] generateHash();
 
     public final byte[] getHash() {
-        if (hash == null) {
+        if (hash==null){
             hash = generateHash();
         }
         return hash;
@@ -84,6 +81,4 @@ public abstract class HashIdentifiedSpeechComponent extends SpeechComponent {
         builder.append(name);
         return builder.toString();
     }
-
-    public abstract HashIdentifiedSpeechComponent clone();
 }

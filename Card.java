@@ -1,10 +1,12 @@
 package org.debatetool.core;
 
-import org.debatetool.core.html.HtmlEncoder;
 import org.debatetool.io.IOUtil;
 import org.debatetool.io.iocontrollers.IOController;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,36 +51,25 @@ public class Card extends HashIdentifiedSpeechComponent implements StateRecovera
      */
     protected long timeStamp;
 
-    private Card(){
-
-    }
-
     public Card(byte[] hash){
-        this();
-        this.hash = hash;
+        super(hash);
     }
 
     public Card(Cite cite, String text) {
-        this();
         setCite(cite);
         setText(text);
-    }
-
-    public Card(DataInputStream in) throws IOException {
-        this();
-        loadFromInput(in, true);
     }
 
     public Cite getCite() {
         return cite;
     }
 
-    public void setCite(Cite cite) {
+    private void setCite(Cite cite) {
         this.cite = cite;
         setModified(true);
     }
 
-    public void setCite(String author, String date, String additionalInfo){
+    private void setCite(String author, String date, String additionalInfo){
         this.cite = new Cite(author, date, additionalInfo);
         setModified(true);
     }
@@ -87,7 +78,7 @@ public class Card extends HashIdentifiedSpeechComponent implements StateRecovera
         return text;
     }
 
-    public void setText(String text){
+    private void setText(String text){
         this.text = text;
         formatText();
         timeStamp = System.currentTimeMillis();
@@ -103,23 +94,25 @@ public class Card extends HashIdentifiedSpeechComponent implements StateRecovera
         out.writeByte(0);
     }
 
-    public void loadFromInput(DataInput in, boolean checkHash) throws IOException{
-        hash = new byte[16];
+    public static Card loadFromInput(DataInput in, boolean checkHash) throws IOException{
+        byte[] hash = new byte[16];
         in.readFully(hash);
-        timeStamp = in.readLong();
-        cite = new Cite(in);
-        text = IOUtil.readDeserializeString(in);
+        long timeStamp = in.readLong();
+        Cite cite = new Cite(in);
+        String text = IOUtil.readDeserializeString(in);
         byte nullTerm = in.readByte();
         if (nullTerm!=0){
             throw new IllegalStateException("Card missing null terminator");
         }
+        Card card = new Card(cite,text);
+        card.timeStamp = timeStamp;
         if (checkHash){
-            byte[] validHash = generateHash();
+            byte[] validHash = card.getHash();
             if (!Arrays.equals(hash,validHash)){
-                hash = validHash;
                 throw new IllegalStateException("Hash validation failed for card load");
             }
         }
+        return card;
     }
 
     @Override
@@ -174,6 +167,17 @@ public class Card extends HashIdentifiedSpeechComponent implements StateRecovera
         for (int i = 5; i < values.size(); i++){
             tags.add(values.get(i));
         }
+    }
+
+    @Override
+    protected byte[] generateHash() {
+        MessageDigest dg = null;
+        try {
+            dg = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return dg.digest((text+cite.toString()).getBytes(StandardCharsets.UTF_8));
     }
 
     public int getTagIndex(){
@@ -286,7 +290,7 @@ public class Card extends HashIdentifiedSpeechComponent implements StateRecovera
 
     @Override
     public void load() throws IOException {
-        Card self = (Card) IOController.getIoController().getComponentIOManager().retrieveSpeechComponent(hash);
+        Card self = (Card) IOController.getIoController().getComponentIOManager().retrieveSpeechComponent(getHash());
         // TODO maybe a better way to import this information
         setTo(self);
     }
@@ -297,11 +301,6 @@ public class Card extends HashIdentifiedSpeechComponent implements StateRecovera
         this.timeStamp = card.timeStamp;
         this.tags = card.tags;
 
-    }
-
-    @Override
-    public String getHashString() {
-        return text+cite.toString();
     }
 
     @Override
