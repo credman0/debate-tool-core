@@ -216,7 +216,19 @@ public abstract class SpeechElementContainer extends HashIdentifiedSpeechCompone
         if (!(o instanceof SpeechElementContainer)){
             return false;
         }
-        return contents.equals(((SpeechElementContainer) o).contents) && getHash().equals(((SpeechElementContainer) o).getHash()) && getName().equals(((SpeechElementContainer) o).getName());
+        return contents.equals(((SpeechElementContainer) o).contents) && bytesEqual(getHash(),((SpeechElementContainer) o).getHash()) && getName().equals(((SpeechElementContainer) o).getName());
+    }
+
+    public static boolean bytesEqual(byte[] b0, byte[] b1){
+        if (b0.length!=b1.length){
+            return false;
+        }
+        for (int i = 0; i < b0.length; i++){
+            if (b0[i]!=b1[i]){
+                return false;
+            }
+        }
+        return true;
     }
 
     protected abstract String getEnumeration(int i);
