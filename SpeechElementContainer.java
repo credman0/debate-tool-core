@@ -61,6 +61,11 @@ public abstract class SpeechElementContainer extends HashIdentifiedSpeechCompone
             if (component instanceof Card){
                 contentsBuilder.append("<n>"+((Card) component).getActiveTag() + "</n><br>");
             }
+            if (component instanceof SpeechElementContainer){
+                contentsBuilder.append(((SpeechElementContainer) component).getExportDisplayContent(includeAnalytics));
+            }else{
+                contentsBuilder.append(component.getDisplayContent());
+            }
             contentsBuilder.append("</p>");
         }
         return contentsBuilder.toString();
