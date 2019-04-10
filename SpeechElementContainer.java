@@ -91,8 +91,10 @@ public abstract class SpeechElementContainer extends HashIdentifiedSpeechCompone
         return null;
     }
 
+    public abstract boolean canBeAdded(SpeechComponent component);
+
     public void addComponent(SpeechComponent component){
-        if (component.getClass().isAssignableFrom(Speech.class) || component.getClass().isAssignableFrom(Block.class)){
+        if (!canBeAdded(component)){
             throw new IllegalArgumentException("Attempted to add component of illegal type: " + component.getClass());
         }
         contents.add(component);

@@ -21,6 +21,11 @@ public class Speech extends SpeechElementContainer{
         super(name);
     }
 
+    @Override
+    public boolean canBeAdded(SpeechComponent component) {
+        return (!(component instanceof Speech)) &&(!(component instanceof Analytic));
+    }
+
     public Speech(byte[] hash) {
         super(hash, "");
     }

@@ -28,4 +28,9 @@ public class Block extends SpeechElementContainer {
     public Block(String name){
         super(name);
     }
+
+    @Override
+    public boolean canBeAdded(SpeechComponent component) {
+        return (!(component instanceof Speech)) &&(!(component instanceof Block));
+    }
 }
