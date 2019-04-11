@@ -156,7 +156,7 @@ public abstract class SpeechElementContainer extends HashIdentifiedSpeechCompone
     }
 
     @Override
-    public void importFromLabelledLists(ArrayList<String> labels, ArrayList<String> values) {
+    public void importFromLabelledLists(List<String> labels, List<String> values) {
         this.name = values.get(0);
         for (int i = 0; i < labels.size(); i++){
             try {

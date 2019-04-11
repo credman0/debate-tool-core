@@ -164,7 +164,7 @@ public class Card extends HashIdentifiedSpeechComponent implements StateRecovera
     }
 
     @Override
-    public void importFromLabelledLists(ArrayList<String> labels, ArrayList<String> values) {
+    public void importFromLabelledLists(List<String> labels, List<String> values) {
         String author = values.get(0);
         String date = values.get(1);
         String info = values.get(2);

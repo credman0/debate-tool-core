@@ -51,9 +51,9 @@ public abstract class HashIdentifiedSpeechComponent extends SpeechComponent {
 
     public abstract ArrayList<String>[] toLabelledLists();
 
-    public abstract void importFromLabelledLists(ArrayList<String> labels, ArrayList<String> values);
+    public abstract void importFromLabelledLists(List<String> labels, List<String> values);
 
-    public static HashIdentifiedSpeechComponent createFromLabelledLists(String type, ArrayList<String> labels, ArrayList<String> values, byte[] hash) {
+    public static HashIdentifiedSpeechComponent createFromLabelledLists(String type, List<String> labels, List<String> values, byte[] hash) {
         if (type.equals(Card.class.getName())) {
             Card card = new Card(hash);
             card.importFromLabelledLists(labels, values);
